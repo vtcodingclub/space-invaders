@@ -60,6 +60,8 @@ class Player(Ship):
         self.max_health = health
 
     def move_lasers(self, vel, objs):
+        hit = []
+
         self.cooldown()
         for laser in self.lasers:
             laser.move(vel)
@@ -70,9 +72,13 @@ class Player(Ship):
                     if laser.collision(obj):
                         obj.health -= 10
                         if obj.health < 10:
+                            # DIE HERE
+                            hit.append(obj)
                             objs.remove(obj)
                         if laser in self.lasers:
                             self.lasers.remove(laser)
+        
+        return hit
 
     def draw(self, window):
         super().draw(window)

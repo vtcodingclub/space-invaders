@@ -127,7 +127,13 @@ def main():
                 lives -= 1
                 enemies.remove(enemy)
 
-        player.move_lasers(-LASER_VEL, enemies)
+        hit = player.move_lasers(-LASER_VEL, enemies)
+        for h in hit:
+            if isinstance(h, Enemy):
+                score += ENEMY_SCORE
+            if isinstance(h, Boss):
+                score += BOSS_SCORE
+
 
 
 def main_menu():
