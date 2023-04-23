@@ -49,7 +49,7 @@ def main():
         if lives <= 0 or player.health <= 0:
             lost = True
             lost_count += 1
-        if lost and lost_count > FPS * 3:
+        if lost and lost_count > FPS * 2:
             return
 
         if len(enemies) == 0:
@@ -73,7 +73,7 @@ def main():
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                quit()
+                return
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a] and player.x - PLAYER_VEL > 0:  # left
@@ -149,7 +149,10 @@ def main_menu():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 main()
+                return
+        
 
 
 if __name__ == "__main__":
-    main_menu()
+    while True:
+        main_menu()

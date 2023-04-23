@@ -5,8 +5,8 @@ pygame.font.init()
 
 WIDTH, HEIGHT = 750, 750
 FPS = 60
-MAIN_FONT = pygame.font.SysFont("comicsans", 50)
-LOST_FONT = pygame.font.SysFont("comicsans", 60)
+MAIN_FONT = pygame.font.SysFont("arial", 40)
+LOST_FONT = pygame.font.SysFont("arial", 60)
 ENEMY_VEL = 0.5
 PLAYER_VEL = 5
 LASER_VEL = 2
@@ -41,5 +41,5 @@ boss_img = pygame.transform.scale(
 
 # Background
 BG = pygame.transform.scale(
-    pygame.image.load(os.path.join("assets", "background.png")),
+    pygame.image.load(os.path.join("assets", "background.jpg")),
     (WIDTH, HEIGHT))
