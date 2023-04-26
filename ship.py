@@ -5,7 +5,7 @@ from const import WIDTH, HEIGHT, player_ship, orange, boss_img, red, blue, purpl
 
 
 class Ship:
-    COOLDOWN = 30
+    COOLDOWN = 18
 
     def __init__(self, x, y, health=100):
         self.x = x

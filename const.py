@@ -3,13 +3,17 @@ import pygame
 
 pygame.font.init()
 
+FONTS = pygame.font.get_fonts()
+FONT = "consolas" if "consolas" in FONTS else "arial"
+
 WIDTH, HEIGHT = 750, 750
 FPS = 60
-MAIN_FONT = pygame.font.SysFont("arial", 40)
-LOST_FONT = pygame.font.SysFont("arial", 60)
-ENEMY_VEL = 0.5
+MAIN_FONT = pygame.font.SysFont(FONT, 40)
+LOST_FONT = pygame.font.SysFont(FONT, 60, bold=True)
+LASER_VEL = 5
 PLAYER_VEL = 5
-LASER_VEL = 2
+ENEMY_VEL = 0.5
+
 ENEMY_SCORE = 10
 BOSS_SCORE = 100
 

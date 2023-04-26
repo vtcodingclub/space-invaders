@@ -1,44 +1,50 @@
 import random
 import pygame
-from const import WIDTH, HEIGHT, BG, FPS, MAIN_FONT, LOST_FONT, ENEMY_VEL, PLAYER_VEL, LASER_VEL, ENEMY_SCORE, BOSS_SCORE
+from const import WIDTH, HEIGHT, BG, FPS, MAIN_FONT, LOST_FONT, ENEMY_VEL, PLAYER_VEL, LASER_VEL, ENEMY_SCORE, FONT, BOSS_SCORE
 from ship import Boss, Player, Enemy
 from helpers import collide
 
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space Shooter Tutorial")
-
+pygame.display.set_caption("Space Shooters")
 
 def main():
+    global ENEMY_VEL
+    ENEMY_VEL = 0.5
+
     score = 0
     level = 0
-    lives = 5
+    lives = 8
     enemies = []
     num_enemy = 0
     player = Player(300, 500)
     clock = pygame.time.Clock()
     lost = False
-    lost_count = 0
     wave_length = 5
 
     def redraw_window():
         WIN.blit(BG, (0, 0))
-        # draw text
-        lives_label = MAIN_FONT.render(f"Lives: {lives}", 1, (255, 255, 255))
-        score_label = MAIN_FONT.render(f"Level: {level}", 1, (255, 255, 255))
-        level_label = MAIN_FONT.render(f"SCORE: {score}", 1, (255, 255, 255))
-
-        WIN.blit(lives_label, (10, 10))
-        WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
-        WIN.blit(score_label, (level_label.get_width() - 10, 10))
-
-        for enemy in enemies:
-            enemy.draw(WIN)
-
-        player.draw(WIN)
 
         if lost:
-            lost_label = LOST_FONT.render("You Lost!!", 1, (255, 255, 255))
+            lost_label = LOST_FONT.render("Game Over!", 1, (255, 255, 255))
+            score_label = LOST_FONT.render(f"Your Score: {score}", 1, (255, 255, 255))
+            restart_label = MAIN_FONT.render(f"Press ESC To Restart...", 1, (255, 255, 255))
             WIN.blit(lost_label, (WIDTH / 2 - lost_label.get_width() / 2, 350))
+            WIN.blit(score_label, (WIDTH / 2 - score_label.get_width() / 2, 450))
+            WIN.blit(restart_label, (WIDTH / 2 - restart_label.get_width() / 2, 550))
+        else:
+            # draw text
+            lives_label = MAIN_FONT.render(f"Lives: {lives}", 1, (255, 255, 255))
+            score_label = MAIN_FONT.render(f"SCORE: {score}", 1, (255, 255, 255))
+            level_label = MAIN_FONT.render(f"Level: {level}", 1, (255, 255, 255))
+
+            WIN.blit(lives_label, (10, 10))
+            WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
+            WIN.blit(score_label, (level_label.get_width() + 50, 10))
+
+            for enemy in enemies:
+                enemy.draw(WIN)
+
+            player.draw(WIN)
 
         pygame.display.update()
 
@@ -48,16 +54,19 @@ def main():
 
         if lives <= 0 or player.health <= 0:
             lost = True
-            lost_count += 1
-        if lost and lost_count > FPS * 2:
-            return
+        if lost:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_ESCAPE]:
+                return
 
         if len(enemies) == 0:
             level += 1
-            wave_length += 1
             num_enemy += wave_length
 
             if level % 3 == 0:
+                ENEMY_VEL = max(ENEMY_VEL*1.05, 2.2)
+                wave_length += 1
+                lives += 1
                 num_enemy = 0
                 boss_time = Boss(random.randrange(50, WIDTH - 150),
                                  random.randrange(-100, -50))
@@ -90,6 +99,9 @@ def main():
             player.shoot()
 
         for boss_time in enemies[:]:
+            if isinstance(boss_time, Enemy):
+                continue
+
             boss_time.move(ENEMY_VEL)
             boss_time.move_lasers(LASER_VEL, player)
 
@@ -109,6 +121,9 @@ def main():
                 enemies.remove(boss_time)
 
         for enemy in enemies[:]:
+            if isinstance(enemy, Boss):
+                continue
+
             enemy.move(ENEMY_VEL)
             enemy.move_lasers(LASER_VEL, player)
 
@@ -137,7 +152,7 @@ def main():
 
 
 def main_menu():
-    title_font = pygame.font.SysFont("helvetica", 70)
+    title_font = pygame.font.SysFont(FONT, 50)
     WIN.blit(BG, (0, 0))
     title_label = title_font.render("Press the mouse to begin...", 1,
                                     (255, 255, 255))
@@ -154,5 +169,6 @@ def main_menu():
 
 
 if __name__ == "__main__":
+    pygame.init()
     while True:
         main_menu()
