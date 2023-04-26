@@ -113,7 +113,8 @@ def main():
                 boss_time.health -= 10
 
                 if boss_time.health < 0:
-                    score += BOSS_SCORE
+                    if not lost:
+						score += BOSS_SCORE
                     enemies.remove(boss_time)
 
             elif boss_time.y + boss_time.get_height() > HEIGHT:
@@ -135,7 +136,8 @@ def main():
                 enemy.health -= 10
 
                 if enemy.health < 0:
-                    score += ENEMY_SCORE
+                    if not lost:
+						score += ENEMY_SCORE
                     enemies.remove(enemy)
 
             elif enemy.y + enemy.get_height() > HEIGHT:
@@ -144,6 +146,8 @@ def main():
 
         hit = player.move_lasers(-LASER_VEL, enemies)
         for h in hit:
+			if lost: 
+				break
             if isinstance(h, Enemy):
                 score += ENEMY_SCORE
             if isinstance(h, Boss):
